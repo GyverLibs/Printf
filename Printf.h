@@ -88,6 +88,18 @@ class PrintfClass {
         return *this;
     }
 
+#ifdef PF_USE_FOLD
+    template <typename... Args>
+    PrintfClass& print(Args... args) {
+        ((*this)(args), ...);
+        return *this;
+    }
+    template <typename... Args>
+    PrintfClass& println(Args... args) {
+        return print(args...)();
+    }
+#endif
+
    private:
     Print& _p;
 
