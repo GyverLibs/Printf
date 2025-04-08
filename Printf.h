@@ -94,9 +94,21 @@ class PrintfClass {
         ((*this)(args), ...);
         return *this;
     }
+
+    template <typename... Args>
+    PrintfClass& dprint(Args... args) {
+        (_dprint(args), ...);
+        return *this;
+    }
+
     template <typename... Args>
     PrintfClass& println(Args... args) {
         return print(args...)();
+    }
+
+    template <typename... Args>
+    PrintfClass& dprintln(Args... args) {
+        return dprint(args...)();
     }
 #endif
 
@@ -112,6 +124,11 @@ class PrintfClass {
         (*this)(buf);
         while (right && fill > 0) _write(s), --fill;
         return *this;
+    }
+    template <typename T>
+    void _dprint(T data) {
+        (*this)(data);
+        (*this)(',');
     }
 };
 
