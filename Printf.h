@@ -91,7 +91,7 @@ class PrintfClass {
 #if __cplusplus >= 201103L
     template <typename... Args>
     PrintfClass& print(Args... args) {
-        ((*this)(args), ...);
+        (_print(args), ...);
         return *this;
     }
 
@@ -115,9 +115,19 @@ class PrintfClass {
    private:
     Print& _p;
 
+    template <typename T>
+    void _dprint(T data) {
+        _print(data);
+        _print(',');
+    }
+    template <typename T>
+    void _print(T data) {
+        _p.print(data);
+    }
     inline void _write(char c) {
         _p.write(c);
     }
+
     PrintfClass& _printAligned(const char* buf, uint16_t width, bool right, char s) {
         int16_t fill = width ? width - strlen(buf) : 0;
         while (!right && fill > 0) _write(s), --fill;
@@ -125,13 +135,24 @@ class PrintfClass {
         while (right && fill > 0) _write(s), --fill;
         return *this;
     }
-    template <typename T>
-    void _dprint(T data) {
-        (*this)(data);
-        (*this)(',');
-    }
 };
 
 inline PrintfClass PF(Print& p) {
     return p;
 }
+
+// LOG
+#ifdef PF_USE_LOG
+#define PF_LOG(...)                                 \
+    do {                                            \
+        PF_USE_LOG.print(F("> "));                  \
+        PF(PF_USE_LOG).print(__VA_ARGS__);          \
+        PF_USE_LOG.print(F(" in "));                \
+        PF_USE_LOG.print(__FUNCTION__);             \
+        PF_USE_LOG.print(F("() [" __FILE__ " : ")); \
+        PF_USE_LOG.print(__LINE__);                 \
+        PF_USE_LOG.println(']');                    \
+    } while (0);
+#else
+#define PF_LOG(...)
+#endif
