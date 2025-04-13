@@ -88,7 +88,7 @@ class PrintfClass {
         return *this;
     }
 
-#ifdef PF_USE_FOLD
+#if __cplusplus >= 201103L
     template <typename... Args>
     PrintfClass& print(Args... args) {
         ((*this)(args), ...);
