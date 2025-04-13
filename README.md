@@ -1,8 +1,13 @@
 # Printf
+Лёгкая форматированная печать для Arduino Print
+- Вывод чисел с указанием ширины и выравнивания, целые - с основанием, float - с кол-вом десятичных
+- Вывод строк с выравниванием
+- Вывод variadic списка любых типов
+
 ## Документация
 ```cpp
 // constructor
-Printf(Print&);
+PF(Print&);
 
 // new line
 ();
@@ -33,11 +38,13 @@ dprintln(Args... args);
 float f = 12.345;
 int i = 123;
 
-Printf(Serial)("hello", 10)()("hello", 10, false)();
-Printf(Serial)(f)();
-Printf(Serial)(i)();
-Printf(Serial)(f, 3, 7, true)(',')(f, 3, 7, false)();
-Printf(Serial)(i, 10, 7, true, ' ')(',')(-i, 10, 7, false)();
+PF(Serial)("hello", 10)()("hello", 10, false)();
+
+PF(Serial)(f)();
+PF(Serial)(i)();
+PF(Serial)(f, 3, 7, true)(',')(f, 3, 7, false)();
+PF(Serial)(i, 10, 7, true, ' ')(',')(-i, 10, 7, false)();
+PF(Serial).dprintln(f, i, 1234, 3.14, "abc", F("def"));
 ```
 ```
 hello     
@@ -46,4 +53,5 @@ hello
 123
 12.3450,012.345
 123    ,-000123
+12.35,123,1234,3.14,abc,def,
 ```
